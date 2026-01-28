@@ -1,7 +1,9 @@
+// Copyright (c) 2022 The ZMK Contributors
+// SPDX-License-Identifier: MIT
 
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
-#include "includes/behaviors.dtsi" // Home-row mods, ...
+#include "includes/behaviors.dtsi" // Home-row mods, mod-morph keys, ...
 #include "includes/macros.dtsi"    // Accent macros
 #include <dt-bindings/zmk/bt.h>
 
@@ -11,14 +13,12 @@
 #define NUM_L 3
 #define SYM_L 4
 #define FN_L 5
-#define GM_L 6
-#define LGM_L 7
-#define LGM2_L 8
-#define HYP(key) LS(LC(LA(LG(key))))
+#define HYP_L 6
 #define MEH(key) LS(LC(LA(key)))
+#define HYP(key) LG(LS(LC(LA(key))))
 
 // Using layer taps on thumbs, having quick tap as well helps w/ repeating space/backspace
-&lt { quick_tap_ms = <180>; };
+&lt { quick-tap-ms = <175>; };
 
 / {
     keymap {
@@ -26,108 +26,73 @@
 
         default_layer {
             bindings = <
-                         &kp C         &kp O         &kp P         &kp W         &kp J         &kp M         &kp D         &odkexc
-&kp Q      &lt FN_L A    &hm LALT S    &hm LCTRL E   &hm LGUI N    &kp F         &kp L         &hm RGUI R    &hm RCTRL T   &hm LALT I      &kp U    &kp Y
-           &kp Z         &kp X         &dashion      &kp V         &kp B         &pecol        &kp H         &kp G         &comacol        &kp K
-
-                                                &sk LSHIFT    &lt NAV_L MEH(F19)   &lt NUM_L SPACE    &lt_bs SYM_L 0
-                                                           &sk LS(LA(LCTRL))  &mt LCMD TAB
+                &kp C      &kp O      &kp P      &kp W          &kp J      &kp M      &kp D      &odkexc
+                &kp Q      &lt FN_L A  &hml LALT S &hml LCTRL E &hml LGUI N &kp F      &kp L      &hmr RGUI R &hmr RCTRL T &hmr LALT I &kp U      &kp Y
+                &kp Z      &kp X      &dashion   &kp V          &kp B          &pecol     &kp H      &kp G      &comacol   &kp K
+                                             &sk LSHFT  &lt NAV_L BSPC    &lt NUM_L SPACE  &lt SYM_L TAB
+                                                                  &trans          &trans
             >;
-        }; 
+        };
 
         odk {
-            label = "ODK_OneDeadKey";
             bindings = <
-                            &kp RA(C)    &kp LA(Q)    &o_circ     &trans        &trans        &trans        &kp UNDER     &kp LA(U)
-&a_circ       &a_grave      &e_acute     &e_grave     &e_circ     &trans        &kp LPAR      &kp RPAR      &i_circ       &i_trema      &u_grave       &u_circ
-              &kp LA(SQT)   &trans       &trans       &trans      &trans        &trans        &trans        &trans        &trans        &trans        
-
-                                                        &trans       &trans      &kp APOS        &trans
-                                                                     &trans        &trans
+                &kp RA(C)   &kp LA(Q)  &o_circ    &trans        &trans        &trans        &kp UNDER   &kp LA(U)
+                &a_circ     &a_grave   &e_acute   &e_grave      &e_circ       &trans        &kp LPAR    &kp RPAR    &i_circ    &i_trema   &u_grave    &u_circ
+                &kp LA(SQT) &trans     &trans     &trans        &trans        &trans        &trans      &trans      &trans     &trans
+                                             &trans     &trans          &kp APOS       &trans
+                                                                  &trans          &trans
             >;
         };
 
         nav_layer {
-            label = "NAV_Navigation";
             bindings = <
-                            &kp PAGE_DOWN &kp UP        &kp PAGE_UP   &kp PAGE_DOWN &kp C_VOL_UP  &kp C_BRI_UP  &trans        &trans
-&trans        &kp HOME      &kp LEFT      &kp DOWN      &kp RIGHT     &kp END       &kp C_VOL_DN  &kp C_BRI_DN  &trans        &trans        &kp RIGHT_SHIFT &trans
-              &kp LG(Z)     &kp LG(X)     &kp LG(C)     &kp LG(V)     &trans        &kp C_MUTE    &kp C_STOP    &kp C_PREV    &kp C_NEXT    &kp C_PP
-
-                                                        &trans        &trans        &kp MEH(SPACE)        &kp MEH(BACKSPACE)
-                                                                      &trans        &kp MEH(TAB)
+                &kp HOME         &kp UP          &kp END         &kp PAGE_UP       &kp MEH(F1)  &kp MEH(F2)  &kp MEH(F3)  &kp MEH(F4)
+                &kp LG(MEH(TAB)) &kp MEH(TAB)    &kp LEFT       &kp DOWN          &kp RIGHT    &kp PAGE_DOWN &kp MEH(F6) &hmr RGUI MEH(F7) &hmr RCTRL MEH(F8) &hmr LALT MEH(F9) &hmr RSHIFT MEH(F10) &kp MEH(F5)
+                &kp LG(Z)        &kp LG(X)       &kp LG(C)      &kp LG(V)         &kp MEH(N1)  &kp MEH(F11) &kp MEH(F12) &kp MEH(F13) &kp MEH(F16) &kp MEH(F17)
+                                                   &trans            &trans              &lt HYP_L MEH(SPACE)      &kp MEH(BACKSPACE)
+                                                                  &trans                &trans
             >;
         };
 
         math_layer {
-            label = "NUM_Numbers";
+            // Also used for Aerospace
             bindings = <
-                            &kp MEH(GRAVE) &kp MEH(UP)        &kp MEH(MINUS)   &kp MEH(SINGLE_QUOTE)        &kp KP_DIVIDE &kp N7        &kp N8        &kp N9
-&kp MEH(F20)     &kp MEH(LBKT)      &kp MEH(LEFT)      &kp MEH(DOWN)      &kp MEH(RIGHT)     &kp MEH(RBKT)              &kp MINUS      &kp N4      &kp N5        &kp N6        &kp N0        &kp EQUAL
-              &kp MEH(MINUS)      &kp MEH(SLASH)     &kp MEH(EQUAL)     &kp MEH(BACKSLASH)     &kp MEH(LBKT)               &trans   &kp N1        &kp N2        &kp N3        &kp PLUS
-
-                                                        &trans        &kp LCMD        &trans        &trans
-                                                                      &trans        &trans
+                &kp MEH(GRAVE) &kp MEH(UP)       &kp MEH(MINUS)  &kp MEH(SINGLE_QUOTE)   &kp KP_DIVIDE &kp N7      &kp N8      &kp N9
+                &kp MEH(F20)   &kp MEH(LBKT)     &kp MEH(LEFT)   &kp MEH(DOWN)           &kp MEH(RIGHT) &kp MEH(RBKT) &kp PLUS    &kp N4      &kp N5      &kp N6      &kp N0      &kp SPACE
+                &kp MEH(MINUS) &kp MEH(SLASH)    &kp MEH(EQUAL)  &kp MEH(BACKSLASH)      &kp MEH(LBKT) &kp COMMA   &kp N1      &kp N2      &kp N3      &kp PERIOD
+                                              &kp LCMD      &lt HYP_L DEL               &trans        &trans
+                                                                  &trans        &trans
             >;
         };
 
         sym_layer {
-            label = "SYM_Symbols";
             bindings = <
-                          &kp LT      &kp GT       &kp DOLLAR    &kp PERCENT        &kp AT      &kp AMPS      &kp STAR    &kp SQT
-&kp CARET     &kp LBRC    &kp LPAR     &kp RPAR      &kp RBRC      &kp EQUAL        &kp BSLH    &kp PLUS    &kp MINUS     &kp SLASH     &kp DQT      &kp GRAVE
-              &kp TILDE   &kp LBKT     &kp RBKT      &kp UNDER     &kp HASH         &kp PIPE    &kp EXCL    &kp SEMICOLON &kp COLON     &kp QUESTION
-
-                                                        &trans        &trans        &trans        &trans
-                                                                      &trans        &trans
+                &kp LT      &kp GT       &kp DOLLAR   &kp PERCENT      &kp AT      &kp AMPS     &kp STAR    &kp SQT
+                &kp CARET   &kp LBRC     &kp LPAR     &kp RPAR         &kp RBRC    &kp EQUAL    &kp BSLH    &kp PLUS    &kp MINUS   &kp SLASH   &kp DQT     &kp GRAVE
+                &kp TILDE   &kp LBKT     &kp RBKT     &kp UNDER        &kp HASH    &kp PIPE     &kp EXCL    &kp SEMICOLON &kp COLON &kp QUESTION
+                                             &trans     &trans            &trans        &trans
+                                                                  &trans        &trans
             >;
         };
 
         fn_layer {
-            label = "FN_FnKeys";
             bindings = <
-                            &bt BT_CLR    &bt BT_CLR_ALL &trans       &trans        &kp F10        &kp F7        &kp F8        &kp F9
-&sys_reset        &trans        &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &kp F11        &kp F4        &kp F5        &kp F6        &to LGM_L        &to GM_L
-              &trans        &trans        &trans        &trans        &bt BT_SEL 4  &kp F13        &kp F1        &kp F2        &kp F3       &kp F12
-
-                                                        &trans        &bt BT_NXT    &trans        &trans
-                                                                      &bt BT_PRV    &trans
+                &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_CLR_ALL    &kp F10    &kp F7      &kp F8      &kp F9
+                &bootloader  &trans       &trans       &trans            &trans     &trans       &kp F11     &kp F4      &kp F5      &kp F6      &kp C_PP    &kp C_NEXT
+                &kp C_BRI_DN &kp C_BRI_UP &kp C_VOL_DN &kp C_VOL_UP      &kp C_MUTE &kp F13      &kp F1      &kp F2      &kp F3      &kp F12
+                                             &trans     &trans               &trans        &trans
+                                                                  &trans        &trans
             >;
         };
 
-        gaming_layer {
-            label = "GM_Gaming_RTS";
+        hyp_layer {
+            // Double thumbs layer
             bindings = <
-                            &kp W         &kp E         &kp R         &kp T         &trans        &trans        &trans        &trans
-&kp TAB       &kp A         &kp S         &kp D         &kp F         &kp G         &trans        &trans        &trans        &trans        &trans        &to DEF_L
-              &kp Z         &kp X         &kp C         &kp V         &kp B         &trans        &trans        &trans        &trans        &trans        
-
-                                                        &sk LCTRL     &kp SPACE     &kp TAB       &kp ESCAPE
-                                                                      &sk LSHFT     &kp ENTER
-            >;
-        };
-
-        gaming_layer_l {
-            label = "GM_Gaming_layered";
-            bindings = <
-                            &kp W         &kp E         &kp R         &kp T         &kp Y        &kp U        &kp I        &kp O
-&kp TAB       &kp A         &kp S         &kp D         &kp F         &kp G         &kp H        &kp J        &kp K        &kp L        &kp SEMI        &to DEF_L
-              &kp Z         &kp X         &kp C         &kp V         &kp B         &kp N        &kp M        &kp P        &kp Q      &kp COMMA
-
-                                                        &hm LGUI ENTER    &lt LGM2_L SPACE      &kp TAB       &kp ESCAPE
-                                                                            &hm LSHIFT ESCAPE     &kp ENTER
-            >;
-        };
-
-        gaming_layered_second_layer {
-            label = "GM_Gaming_layered_2";
-            bindings = <
-                            &kp N1         &kp N2         &kp N3         &kp N4         &trans        &trans        &trans        &trans
-&kp TAB       &kp A         &kp N5         &kp N6         &kp N7         &kp N8         &trans        &trans        &trans        &trans        &trans        &to DEF_L
-              &kp Z         &kp X         &kp C         &kp V         &kp B         &trans        &trans        &trans        &trans        &trans        
-
-                                                        &sk LCTRL     &kp SPACE     &kp TAB       &kp ESCAPE
-                                                                      &sk LSHFT     &kp ENTER
+                &kp HYP(GRAVE) &kp HYP(UP)      &kp HYP(MINUS) &kp HYP(SINGLE_QUOTE)  &kp HYP(F1)  &kp HYP(F2)  &kp HYP(F3)  &kp HYP(F4)
+                &kp HYP(F20)   &kp HYP(LBKT)    &kp HYP(LEFT)  &kp HYP(DOWN)          &kp HYP(RIGHT) &kp HYP(RBKT) &kp HYP(F6)  &kp HYP(F7)  &kp HYP(F8)  &kp HYP(F9)  &kp HYP(F10) &kp HYP(F5)
+                &kp HYP(MINUS) &kp HYP(SLASH)   &kp HYP(EQUAL) &kp HYP(BACKSLASH)     &kp HYP(LBKT) &kp HYP(F11) &kp HYP(F12) &kp HYP(F13) &kp HYP(F16) &kp HYP(F17)
+                                             &trans       &trans            &trans        &trans
+                                                                  &trans        &trans
             >;
         };
     };
@@ -135,122 +100,34 @@
     combos {
         compatible = "zmk,combos";
 
-        //        0  1  2  3     4  5  6  7  
-        //  8  9  10 11 12 13    14 15 16 17 18 19
-        //     20 21 22 23 24    25 26 27 28 29
-        //              30 31    32 33
-        //                 34    35
-
-        // This need to be the 1st entry for the yq command in README to work
+        // tolkeeb_zero transform order keeps bottom row at positions 20..29, matching tolksweep combos.
         combo_caps_word {
             timeout-ms = <40>;
             key-positions = <20 29>;
             bindings = <&caps_word>;
             layers = <0>;
-            require-prior-idle-ms = <100>;  
+            require-prior-idle-ms = <200>;
         };
 
-        // Braces combos
-        combo_col_1 {
-            timeout-ms = <40>;
-            key-positions = <0 10>;
-            bindings = <&kp LEFT_BRACKET>;
-            layers = <0>;
-            require-prior-idle-ms = <100>;  
-        };
-
-        combo_col_2 {
-            timeout-ms = <40>;
-            key-positions = <1 11>;
-            bindings = <&kp LEFT_PARENTHESIS>;
-            layers = <0>;
-            require-prior-idle-ms = <100>;  
-        };
-
-        combo_col_3 {
-            timeout-ms = <40>;
-            key-positions = <2 12>;
-            bindings = <&kp LEFT_BRACE>;
-            layers = <0>;
-            require-prior-idle-ms = <100>;  
-        };
-
-        combo_col_4 {
-            timeout-ms = <40>;
-            key-positions = <5 15>;
-            bindings = <&kp RIGHT_BRACE>;
-            layers = <0>;
-            require-prior-idle-ms = <100>;  
-        };
-
-        combo_col_5 {
-            timeout-ms = <40>;
-            key-positions = <6 16>;
-            bindings = <&kp RIGHT_PARENTHESIS>;
-            layers = <0>;
-            require-prior-idle-ms = <100>;  
-        };
-
-        combo_col_6 {
-            timeout-ms = <40>;
-            key-positions = <7 17>;
-            bindings = <&kp RIGHT_BRACKET>;
-            layers = <0>;
-            require-prior-idle-ms = <100>;  
-        };
-
-        // Vim-inspired (old J-K)
         combo_exit {
-            timeout-ms = <40>;
-            key-positions = <22 23>;
+            timeout-ms = <90>;
+            key-positions = <22 21>;
             bindings = <&kp ESC>;
-            // layers = <0>;
-            require-prior-idle-ms = <50>;  
+            require-prior-idle-ms = <50>;
         };
 
         combo_ret {
-            timeout-ms = <40>;
-            key-positions = <26 27>;
+            timeout-ms = <120>;
+            key-positions = <27 28>;
             bindings = <&kp RET>;
-            // layers = <0>;
-            require-prior-idle-ms = <50>;  
+            require-prior-idle-ms = <50>;
         };
 
-        combo_gaming_first {
-            timeout-ms = <40>;
+        combo_bottom_left {
+            timeout-ms = <90>;
             key-positions = <20 21>;
-            bindings = <&kp N>;
-            layers = <GM_L>;
+            bindings = <&kp Q>;
+            require-prior-idle-ms = <50>;
         };
-
-        combo_gaming_second {
-            timeout-ms = <40>;
-            key-positions = <21 22>;
-            bindings = <&kp M>;
-            layers = <GM_L>;
-        };
-
-        // Extra exotic combos
-        // combo_thumbs {
-        //     timeout-ms = <40>;
-        //     key-positions = <31 33>;
-        //     bindings = <&e_acute>;
-        //     layers = <0>;
-        // };
-
-        // combo_left_thumb {
-        //     timeout-ms = <40>;
-        //     key-positions = <30 31>;
-        //     bindings = <&kp SLASH>;
-        //     layers = <0>;
-        // };
-
-        // combo_right_thumb {
-        //     timeout-ms = <40>;
-        //     key-positions = <32 33>;
-        //     bindings = <&kp TAB>;
-        //     layers = <0>;
-        // };
-
     };
 };
