@@ -30,7 +30,7 @@
                 &kp Q      &lt FN_L A  &hml LALT S &hml LCTRL E &hml LGUI N &kp F      &kp L      &hmr RGUI R &hmr RCTRL T &hmr LALT I &kp U      &kp Y
                 &kp Z      &kp X      &dashion   &kp V          &kp B          &pecol     &kp H      &kp G      &comacol   &kp K
                                              &sk LSHFT  &lt NAV_L BSPC    &lt NUM_L SPACE  &lt SYM_L TAB
-                                                                  &trans          &trans
+                                                                  &trans          &kp Y
             >;
         };
 
